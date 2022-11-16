@@ -1,11 +1,23 @@
 import User from '../models/User.js'
+import bcrypt from 'bcryptjs'
+import { createError } from '../utils/error.js'
 
 export const createUser = async (req, res, next) => {
-  const newUser = new User(req.body)
+  const user = req.body
+  const salt = bcrypt.genSaltSync(10)
+  const hash = bcrypt.hashSync(user.password, salt)
+
+  const isUserNameExist = await User.exists({ userName: user.userName })
+  if (isUserNameExist)
+    return next(createError(409, `${user.userName} is already exist!`))
+
+  const isEmailExist = await User.exists({ email: user.email })
+  if (isEmailExist)
+    return next(createError(409, `${user.email} is already exist!`))
 
   try {
-    const savedUser = await newUser.save()
-    res.status(200).json(savedUser)
+    await new User({ ...user, password: hash }).save()
+    res.status(200).json('User has been created')
   } catch (error) {
     next(error)
   }
@@ -13,12 +25,12 @@ export const createUser = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
       { new: true }
     )
-    res.status(200).json(updatedUser)
+    res.status(200).json('User has been updated!')
   } catch (error) {
     next(error)
   }
@@ -43,9 +55,20 @@ export const getUser = async (req, res, next) => {
 }
 
 export const getAllUsers = async (req, res, next) => {
+  const { limit, page = 1, createdAt = 1, ...rest } = req.query
+
   try {
-    const users = await User.find()
-    res.status(200).json(users)
+    const users = await User.find({ ...rest })
+      .sort({ createdAt })
+      .limit(limit)
+      .skip((page - 1) * limit)
+    const count = await User.countDocuments({ ...rest })
+
+    res.status(200).json({
+      users,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page
+    })
   } catch (error) {
     next(error)
   }

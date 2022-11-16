@@ -14,7 +14,7 @@ const router = express.Router()
 router.post('/', createOrder)
 
 //UPDATE
-router.put('/:id', updateOrder)
+router.put('/:id', verifyAdmin, updateOrder)
 
 //DELETE
 router.delete('/:id', verifyAdmin, deleteOrder)
@@ -23,6 +23,6 @@ router.delete('/:id', verifyAdmin, deleteOrder)
 router.get('/find/:id', getOrder)
 
 //GET ALL
-router.get('/', getAllOrders)
+router.get('/', verifyAdmin, getAllOrders)
 
 export default router

@@ -38,7 +38,12 @@ export const registerUser = async (req, res, next) => {
       text: url
     })
 
-    res.status(201).json('An Email sent to your account. Please verify!')
+    res
+      .status(201)
+      .json({
+        data: createdUser,
+        successMsg: 'An Email sent to your account. Please verify!'
+      })
   } catch (error) {
     next(error)
   }
@@ -83,13 +88,15 @@ export const loginUser = async (req, res, next) => {
         email: user.email,
         hasNewsletter: user.hasNewsletter,
         photo: user.photo,
-        isVerified: user.isVerified
+        isVerified: user.isVerified,
+        name: user.name,
+        lastName: user.lastName
       },
       process.env.JWT,
       { expiresIn: Number(process.env.SESSION_MAX_AGE) }
     )
 
-    const { password, isAdmin, ...rest } = user._doc
+    const { password, ...rest } = user._doc
     res
       .cookie('access_token', accessToken, { httpOnly: true })
       .cookie('session_token', sessionToken, { httpOnly: true })

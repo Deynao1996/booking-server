@@ -7,9 +7,7 @@ import User from './models/User.js'
 function findUserOrCreate(profile, cb) {
   const salt = bcrypt.genSaltSync(10)
   const hash = bcrypt.hashSync(profile.id, salt)
-  const handleMessage = profile.provider
-    ? `${profile.provider} doesn't provide access to this user information`
-    : 'do not provide'
+  const handleMessage = 'Not provide'
 
   User.findOrCreate(
     {

@@ -10,7 +10,9 @@ import hotelsRouter from './routes/hotels.js'
 import roomsRouter from './routes/rooms.js'
 import usersRouter from './routes/users.js'
 import stripeRouter from './routes/stripe.js'
+import statsRouter from './routes/stats.js'
 import orderRouter from './routes/order.js'
+import notificationsRouter from './routes/notifications.js'
 import passportRouter from './routes/passport.js'
 import resetPasswordRouter from './routes/resetPassword.js'
 import { handleErrors } from './middlewares/handleErrors.js'
@@ -60,8 +62,10 @@ app.use('/api/auth', authRouter)
 app.use('/api/hotels', hotelsRouter)
 app.use('/api/rooms', roomsRouter)
 app.use('/api/users', usersRouter)
-app.use('/api/order', orderRouter)
+app.use('/api/orders', orderRouter)
 app.use('/api/payment', stripeRouter)
+app.use('/api/stats', statsRouter)
+app.use('/api/notifications', notificationsRouter)
 app.use('/api/reset-password', resetPasswordRouter)
 app.use('/api/passport', passportRouter)
 

@@ -3,15 +3,16 @@ import findOrCreate from 'findorcreate-promise'
 
 const UserSchema = new mongoose.Schema(
   {
-    userName: { type: String, required: true },
-    name: { type: String, required: true },
-    lastName: { type: String, required: true },
+    userName: { type: String, required: true, unique: true },
+    name: { type: String, required: true, default: 'Not provide' },
+    lastName: { type: String, required: true, default: 'Not provide' },
     email: {
       type: String,
       required: true,
       lowercase: true,
       trim: true,
-      required: true
+      required: true,
+      unique: true
     },
     password: { type: String, required: true },
     hasNewsletter: { type: Boolean, default: false },

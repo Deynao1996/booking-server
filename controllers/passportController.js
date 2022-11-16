@@ -2,8 +2,17 @@ import { createError } from '../utils/error.js'
 import jwt from 'jsonwebtoken'
 
 export const passportCallback = (req, res, _next) => {
-  const { _id, isAdmin, userName, email, hasNewsletter, photo, isVerified } =
-    req.user.result
+  const {
+    _id,
+    isAdmin,
+    userName,
+    email,
+    hasNewsletter,
+    photo,
+    isVerified,
+    name = '',
+    lastName = ''
+  } = req.user.result
   const accessToken = jwt.sign({ id: _id, isAdmin }, process.env.JWT)
   const sessionToken = jwt.sign(
     {
@@ -12,7 +21,9 @@ export const passportCallback = (req, res, _next) => {
       email,
       hasNewsletter,
       photo,
-      isVerified
+      isVerified,
+      name,
+      lastName
     },
     process.env.JWT,
     { expiresIn: Number(process.env.SESSION_MAX_AGE) }

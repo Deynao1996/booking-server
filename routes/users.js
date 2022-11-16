@@ -3,7 +3,8 @@ import {
   deleteUser,
   getAllUsers,
   getUser,
-  updateUser
+  updateUser,
+  createUser
 } from '../controllers/userController.js'
 import { verifyUser, verifyAdmin } from '../utils/verifyToken.js'
 
@@ -20,5 +21,8 @@ router.get('/:id', verifyUser, getUser)
 
 //GET ALL
 router.get('/', verifyAdmin, getAllUsers)
+
+//CREATE
+router.post('/', createUser)
 
 export default router

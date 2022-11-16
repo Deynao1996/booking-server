@@ -6,8 +6,8 @@ export const createHotel = async (req, res, next) => {
   const newHotel = new Hotel(req.body)
 
   try {
-    const savedHotel = await newHotel.save()
-    res.status(200).json(savedHotel)
+    await newHotel.save()
+    res.status(200).json('Hotel has been created!')
   } catch (error) {
     next(error)
   }
@@ -15,12 +15,12 @@ export const createHotel = async (req, res, next) => {
 
 export const updateHotel = async (req, res, next) => {
   try {
-    const updatedHotel = await Hotel.findByIdAndUpdate(
+    await Hotel.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
       { new: true }
     )
-    res.status(200).json(updatedHotel)
+    res.status(200).json('Hotel has been updated!')
   } catch (error) {
     next(error)
   }
@@ -28,7 +28,13 @@ export const updateHotel = async (req, res, next) => {
 
 export const deleteHotel = async (req, res, next) => {
   try {
-    await Hotel.findByIdAndDelete(req.params.id)
+    const hotel = await Hotel.findById(req.params.id)
+    await Promise.all(
+      hotel.rooms.map(async (roomId) => {
+        await Room.deleteOne({ _id: roomId })
+      })
+    )
+    await hotel.delete()
     res.status(200).json('Hotel has been removed')
   } catch (error) {
     next(error)
@@ -45,10 +51,9 @@ export const getHotel = async (req, res, next) => {
 }
 
 export const getAllHotels = async (req, res, next) => {
-  const { min, max, limit, room = 0, page = 1, ...rest } = req.query
+  const { min, max, limit, page = 1, ...rest } = req.query
   const queryOptions = {
     ...rest,
-    $expr: { $gte: [{ $size: '$rooms' }, +room] },
     cheapestPrice: { $gt: (min - 1) | 1, $lt: max || 100000 }
   }
   try {
