@@ -35,7 +35,11 @@ const connectToDataBase = async () => {
   }
 }
 
-const whitelist = [process.env.CLIENT_URL, process.env.DASHBOARD_URL]
+const whitelist = [
+  process.env.CLIENT_URL,
+  process.env.DASHBOARD_URL,
+  'http://192.168.1.102:3000'
+]
 
 app.use(
   cors({

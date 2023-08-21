@@ -96,8 +96,14 @@ export const loginUser = async (req, res, next) => {
 
     const { password, ...rest } = user._doc
     res
-      .cookie('access_token', accessToken, { httpOnly: true })
-      .cookie('session_token', sessionToken, { httpOnly: true })
+      .cookie('access_token', accessToken, {
+        httpOnly: true,
+        domain: '.netlify.app'
+      })
+      .cookie('session_token', sessionToken, {
+        httpOnly: true,
+        domain: '.netlify.app'
+      })
       .status(200)
       .json({ ...rest })
   } catch (error) {
