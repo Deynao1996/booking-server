@@ -1,4 +1,5 @@
 import Order from '../models/Order.js'
+import { createError } from '../utils/error.js'
 
 export const createOrder = async (req, res, next) => {
   const newOrder = new Order(req.body)
@@ -15,6 +16,14 @@ export const createOrder = async (req, res, next) => {
 
 export const updateOrder = async (req, res, next) => {
   try {
+    if (process.env.APP_STATUS === 'demo') {
+      return next(
+        createError(
+          403,
+          'You do not have permission to update order in demo mode!'
+        )
+      )
+    }
     await Order.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
@@ -28,6 +37,14 @@ export const updateOrder = async (req, res, next) => {
 
 export const deleteOrder = async (req, res, next) => {
   try {
+    if (process.env.APP_STATUS === 'demo') {
+      return next(
+        createError(
+          403,
+          'You do not have permission to delete order in demo mode!'
+        )
+      )
+    }
     await Order.findByIdAndDelete(req.params.id)
     res.status(200).json(req.params.id + ' ' + 'Order has been removed')
   } catch (error) {

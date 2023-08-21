@@ -17,6 +17,11 @@ import passportRouter from './routes/passport.js'
 import resetPasswordRouter from './routes/resetPassword.js'
 import { handleErrors } from './middlewares/handleErrors.js'
 import { configPassport } from './configPassport.js'
+import cron from 'node-cron'
+import Order from './models/Order.js'
+import Room from './models/Room.js'
+import User from './models/User.js'
+import Hotel from './models/Hotel.js'
 
 dotenv.config()
 const app = express()
@@ -70,6 +75,28 @@ app.use('/api/reset-password', resetPasswordRouter)
 app.use('/api/passport', passportRouter)
 
 app.use(handleErrors())
+
+cron.schedule('0 0 */2 * * *', async () => {
+  if (process.env.APP_STATUS === 'demo') {
+    try {
+      const [deletedOrders, deletedRooms, deletedUsers, deletedHotels] =
+        await Promise.all([
+          Order.deleteMany({ isTest: true }),
+          Room.deleteMany({ isTest: true }),
+          User.deleteMany({ isTest: true }),
+          Hotel.deleteMany({ isTest: true })
+        ])
+      console.log(
+        `Deleted ${deletedOrders.deletedCount} test orders, ` +
+          `${deletedRooms.deletedCount} test rooms, ` +
+          `${deletedUsers.deletedCount} test users, ` +
+          `${deletedHotels.deletedCount} test hotels`
+      )
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+})
 
 app.listen(8800, () => {
   connectToDataBase()

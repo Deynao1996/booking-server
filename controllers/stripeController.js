@@ -73,7 +73,6 @@ export const createWebhook = async (req, res) => {
   if (event.type === 'payment_intent.succeeded') {
     try {
       const customer = await stripe.customers.retrieve(data.customer)
-      console.log(customer)
       await finishPayment(customer)
       await sendEmail({ email: customer.email, ...emailConfig })
     } catch (error) {

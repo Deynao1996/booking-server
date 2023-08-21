@@ -12,7 +12,8 @@ const OrderSchema = new mongoose.Schema(
     price: { type: Number, required: true },
     isPaid: { type: Boolean, default: false },
     status: { type: String, default: 'pending' },
-    dates: { type: [Date], required: true }
+    dates: { type: [Date], required: true },
+    isTest: { type: Boolean, default: true }
   },
   { timestamps: true }
 )

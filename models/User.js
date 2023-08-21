@@ -19,7 +19,8 @@ const UserSchema = new mongoose.Schema(
     isAdmin: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },
     photo: { type: String },
-    passportId: { type: String }
+    passportId: { type: String },
+    isTest: { type: Boolean, default: true }
   },
   { timestamps: true }
 )

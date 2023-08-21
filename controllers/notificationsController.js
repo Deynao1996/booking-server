@@ -14,6 +14,14 @@ export const createNotification = async (req, res, next) => {
 
 export const updateNotification = async (req, res, next) => {
   try {
+    if (process.env.APP_STATUS === 'demo') {
+      return next(
+        createError(
+          403,
+          'You do not have permission to update notification in demo mode!'
+        )
+      )
+    }
     await Notification.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
@@ -27,6 +35,14 @@ export const updateNotification = async (req, res, next) => {
 
 export const deleteAllNotifications = async (req, res, next) => {
   try {
+    if (process.env.APP_STATUS === 'demo') {
+      return next(
+        createError(
+          403,
+          'You do not have permission to delete notifications in demo mode!'
+        )
+      )
+    }
     await Notification.deleteMany()
     res.status(200).json('Notifications have been removed')
   } catch (error) {

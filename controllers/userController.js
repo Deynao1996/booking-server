@@ -25,6 +25,14 @@ export const createUser = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
   try {
+    if (process.env.APP_STATUS === 'demo') {
+      return next(
+        createError(
+          403,
+          'You do not have permission to change user in demo mode!'
+        )
+      )
+    }
     await User.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
@@ -38,6 +46,14 @@ export const updateUser = async (req, res, next) => {
 
 export const deleteUser = async (req, res, next) => {
   try {
+    if (process.env.APP_STATUS === 'demo') {
+      return next(
+        createError(
+          403,
+          'You do not have permission to delete user in demo mode!'
+        )
+      )
+    }
     await User.findByIdAndDelete(req.params.id)
     res.status(200).json('User has been removed')
   } catch (error) {

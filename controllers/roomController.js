@@ -6,15 +6,9 @@ const dateToString = (date) => new Date(date).toDateString()
 
 export const createRoom = async (req, res, next) => {
   const hotelId = req.params.hotelId
-  const title = req.body.title
   const newRoom = new Room(req.body)
 
   try {
-    // const isRoomExist = await Room.exists({
-    //   title: { $regex: new RegExp(title, 'i') }
-    // })
-    // if (isRoomExist) return next(createError(409, `${title} is already exist!`))
-
     const savedRoom = await newRoom.save()
     await Hotel.findByIdAndUpdate(hotelId, {
       $push: { rooms: savedRoom._id }
@@ -29,6 +23,15 @@ export const updateRoom = async (req, res, next) => {
   const { removedRooms, newRooms, hotelId, ...rest } = req.body
 
   try {
+    if (process.env.APP_STATUS === 'demo') {
+      return next(
+        createError(
+          403,
+          'You do not have permission to update room in demo mode!'
+        )
+      )
+    }
+
     const newHotel = await Hotel.findById(hotelId)
     if (newHotel) {
       const oldHotel = await Hotel.findOne({ rooms: req.params.id })
@@ -92,6 +95,14 @@ export const updateRoomAvailability = async (req, res, next) => {
 
 export const clearRoomAvailability = async (req, res, next) => {
   try {
+    if (process.env.APP_STATUS === 'demo') {
+      return next(
+        createError(
+          403,
+          'You do not have permission to clear room in demo mode!'
+        )
+      )
+    }
     await Room.updateOne(
       { 'roomNumbers._id': req.params.id },
       {
@@ -126,6 +137,14 @@ export const clearRoomDeprecatedDates = async (req, res, next) => {
 
 export const deleteRoom = async (req, res, next) => {
   try {
+    if (process.env.APP_STATUS === 'demo') {
+      return next(
+        createError(
+          403,
+          'You do not have permission to delete room in demo mode!'
+        )
+      )
+    }
     await Room.findByIdAndDelete(req.params.id)
     const hotel = await Hotel.findOne({ rooms: req.params.id })
     await hotel.updateOne({

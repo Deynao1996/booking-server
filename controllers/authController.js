@@ -38,12 +38,10 @@ export const registerUser = async (req, res, next) => {
       text: url
     })
 
-    res
-      .status(201)
-      .json({
-        data: createdUser,
-        successMsg: 'An Email sent to your account. Please verify!'
-      })
+    res.status(201).json({
+      data: createdUser,
+      successMsg: 'An Email sent to your account. Please verify!'
+    })
   } catch (error) {
     next(error)
   }

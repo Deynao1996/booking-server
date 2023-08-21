@@ -18,7 +18,8 @@ const HotelSchema = new mongoose.Schema({
   title: { type: String, required: true },
   cheapestPrice: { type: Number, require: true },
   features: { type: String },
-  featured: { type: Boolean, default: false }
+  featured: { type: Boolean, default: false },
+  isTest: { type: Boolean, default: false }
 })
 
 export default mongoose.model('Hotel', HotelSchema)
