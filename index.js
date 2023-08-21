@@ -35,9 +35,17 @@ const connectToDataBase = async () => {
   }
 }
 
+const whitelist = [process.env.CLIENT_URL, process.env.DASHBOARD_URL]
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: function (origin, callback) {
+      if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
     methods: 'GET, POST, DELETE, PUT',
     credentials: true
   })
