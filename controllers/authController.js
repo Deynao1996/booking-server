@@ -98,13 +98,11 @@ export const loginUser = async (req, res, next) => {
     res
       .cookie('access_token', accessToken, {
         httpOnly: true,
-        domain: '.netlify.app',
         secure: true,
         sameSite: 'none'
       })
       .cookie('session_token', sessionToken, {
         httpOnly: true,
-        domain: '.netlify.app',
         sameSite: 'none',
         secure: true
       })

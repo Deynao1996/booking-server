@@ -48,11 +48,16 @@ app.use(
     credentials: true
   })
 )
+
+app.set('trust proxy', 1)
+
 app.use(
   cookieSession({
     name: 'session',
     keys: ['booking'],
-    maxAge: Number(process.env.SESSION_MAX_AGE)
+    maxAge: Number(process.env.SESSION_MAX_AGE),
+    sameSite: 'none',
+    secure: true
   })
 )
 app.use(passport.initialize())
