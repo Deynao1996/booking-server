@@ -35,11 +35,7 @@ const connectToDataBase = async () => {
   }
 }
 
-const whitelist = [
-  process.env.CLIENT_URL,
-  process.env.DASHBOARD_URL,
-  'http://192.168.1.102:3000'
-]
+const whitelist = [process.env.CLIENT_URL, process.env.DASHBOARD_URL]
 
 app.use(
   cors({
@@ -56,8 +52,8 @@ app.use(
     name: 'session',
     keys: ['booking'],
     maxAge: Number(process.env.SESSION_MAX_AGE),
-    sameSite: 'none',
-    secure: true
+    sameSite: process.env.APP_STATUS === 'demo' ? 'none' : 'lax',
+    secure: process.env.APP_STATUS === 'demo'
   })
 )
 app.use(passport.initialize())

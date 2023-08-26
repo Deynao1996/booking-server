@@ -98,13 +98,13 @@ export const loginUser = async (req, res, next) => {
     res
       .cookie('access_token', accessToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: 'none'
+        sameSite: process.env.APP_STATUS === 'demo' ? 'none' : 'lax',
+        secure: process.env.APP_STATUS === 'demo'
       })
       .cookie('session_token', sessionToken, {
         httpOnly: true,
-        sameSite: 'none',
-        secure: true
+        sameSite: process.env.APP_STATUS === 'demo' ? 'none' : 'lax',
+        secure: process.env.APP_STATUS === 'demo'
       })
       .status(200)
       .json({ ...rest })
