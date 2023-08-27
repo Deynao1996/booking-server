@@ -117,6 +117,14 @@ export const clearRoomAvailability = async (req, res, next) => {
 
 export const clearRoomDeprecatedDates = async (req, res, next) => {
   try {
+    if (process.env.APP_STATUS === 'demo') {
+      return next(
+        createError(
+          403,
+          'You do not have permission to clear dates in demo mode!'
+        )
+      )
+    }
     await Room.updateOne(
       { 'roomNumbers._id': req.params.id },
       req.body.operation === 'delete-all'

@@ -8,7 +8,8 @@ const NotificationSchema = new mongoose.Schema(
       enum: ['new-order', 'new-user'],
       required: true
     },
-    metaId: { type: String }
+    metaId: { type: String },
+    isTest: { type: Boolean, default: true }
   },
   { timestamps: true }
 )

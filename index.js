@@ -22,6 +22,7 @@ import Order from './models/Order.js'
 import Room from './models/Room.js'
 import User from './models/User.js'
 import Hotel from './models/Hotel.js'
+import Notification from './models/Notification.js'
 
 dotenv.config()
 const app = express()
@@ -86,17 +87,24 @@ app.use(handleErrors())
 cron.schedule('0 0 */2 * * *', async () => {
   if (process.env.APP_STATUS === 'demo') {
     try {
-      const [deletedOrders, deletedRooms, deletedUsers, deletedHotels] =
-        await Promise.all([
-          Order.deleteMany({ isTest: true }),
-          Room.deleteMany({ isTest: true }),
-          User.deleteMany({ isTest: true }),
-          Hotel.deleteMany({ isTest: true })
-        ])
+      const [
+        deletedOrders,
+        deletedRooms,
+        deletedUsers,
+        deletedHotels,
+        deletedNotifications
+      ] = await Promise.all([
+        Order.deleteMany({ isTest: true }),
+        Room.deleteMany({ isTest: true }),
+        User.deleteMany({ isTest: true }),
+        Hotel.deleteMany({ isTest: true }),
+        Notification.deleteMany({ isTest: true })
+      ])
       console.log(
         `Deleted ${deletedOrders.deletedCount} test orders, ` +
           `${deletedRooms.deletedCount} test rooms, ` +
           `${deletedUsers.deletedCount} test users, ` +
+          `${deletedNotifications.deletedCount} test notifications, ` +
           `${deletedHotels.deletedCount} test hotels`
       )
     } catch (error) {
