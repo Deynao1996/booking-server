@@ -7,6 +7,15 @@ import { createAuthToken } from '../utils/createAuthToken.js'
 
 export const sendPasswordLink = async (req, res, next) => {
   try {
+    if (process.env.APP_STATUS === 'demo') {
+      return next(
+        createError(
+          403,
+          'You do not have permission to change password in demo mode!'
+        )
+      )
+    }
+
     const user = await User.findOne({ email: req.body.email })
     if (!user)
       return next(createError(409, 'User with given email does not exist!'))
