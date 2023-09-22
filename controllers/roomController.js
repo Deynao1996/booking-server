@@ -9,6 +9,15 @@ export const createRoom = async (req, res, next) => {
   const newRoom = new Room(req.body)
 
   try {
+    if (process.env.APP_STATUS === 'demo') {
+      return next(
+        createError(
+          403,
+          'You do not have permission to create room in demo mode!'
+        )
+      )
+    }
+
     const savedRoom = await newRoom.save()
     await Hotel.findByIdAndUpdate(hotelId, {
       $push: { rooms: savedRoom._id }
