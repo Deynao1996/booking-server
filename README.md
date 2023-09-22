@@ -39,7 +39,7 @@ To start the server in development mode, run:
    npm start
    ```
 
-The server will run at the specified port (usually port 5000) by default.
+The server will run at the specified port (usually port 8800) by default.
 
 ### Usage
 The Booking Server provides APIs and endpoints to support the functionality of the Social web application. You can integrate this server with the frontend part of the application to create a complete system.
